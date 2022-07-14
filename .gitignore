@@ -16,3 +16,6 @@
 
 # JetBrains
 .idea
+
+# config
+/conf/config.ini
