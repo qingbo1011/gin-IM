@@ -1,17 +1,21 @@
 package main
 
 import (
-	"fmt"
 	config "gin-IM/conf"
 	"gin-IM/db/mango"
 	"gin-IM/db/mysql"
 	"gin-IM/db/redis"
+	"gin-IM/route"
+
+	log "github.com/sirupsen/logrus"
 )
 
 func main() {
-	fmt.Println(config.MangoHosts)
-	fmt.Println(config.HttpPort)
-	fmt.Printf("%T", config.MangoHosts)
+	r := route.NewRoute()
+	err := r.Run(config.HttpPort)
+	if err != nil {
+		log.Fatalln(err)
+	}
 }
 
 func init() {

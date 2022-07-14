@@ -11,7 +11,7 @@ import (
 )
 
 var Moctx = context.Background() // 全局MangoDB ctx
-var MangoClient *mongo.Client
+var MangoClient *mongo.Client    // 全局MangoDB Client
 
 func Init() {
 	// mongoClient 连接客户端参数

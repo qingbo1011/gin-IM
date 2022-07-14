@@ -29,5 +29,7 @@ func Init() {
 	db.DB().SetMaxIdleConns(20)                  // 设置空闲连接池中的最大连接数
 	db.DB().SetMaxOpenConns(100)                 // 设置数据库连接最大打开数。
 	db.DB().SetConnMaxLifetime(time.Second * 30) // 设置可重用连接的最长时间
+	// 自动迁移
+
 	MysqlDB = db
 }
