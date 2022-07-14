@@ -1,10 +1,10 @@
 package config
 
 import (
-	"log"
 	"time"
 
 	"github.com/go-ini/ini"
+	log "github.com/sirupsen/logrus"
 )
 
 var (
@@ -13,11 +13,11 @@ var (
 	MysqlHost     string
 	MysqlPort     string
 	MysqlUser     string
-	MysqlPassWord string
+	MysqlPassword string
 	MysqlName     string
 
 	RedisAddr     string
-	RedisPassWord string
+	RedisPassword string
 	RedisDbName   int
 
 	MangoAuthMechanism  string
@@ -53,7 +53,7 @@ func loadMysql(file *ini.File) {
 	MysqlHost = section.Key("MysqlHost").String()
 	MysqlPort = section.Key("MysqlPort").String()
 	MysqlUser = section.Key("MysqlUser").String()
-	MysqlPassWord = section.Key("MysqlPassWord").String()
+	MysqlPassword = section.Key("MysqlPassword").String()
 	MysqlName = section.Key("MysqlName").String()
 }
 
@@ -63,7 +63,7 @@ func loadRedis(file *ini.File) {
 		log.Fatalln(err)
 	}
 	RedisAddr = section.Key("RedisAddr").String()
-	RedisPassWord = section.Key("RedisPassWord").String()
+	RedisPassword = section.Key("RedisPassword").String()
 	RedisDbName = section.Key("RedisDbName").MustInt(1) // MustInt，defaultVal为1
 }
 
