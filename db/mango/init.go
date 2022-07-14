@@ -1,0 +1,5 @@
+package mango
+
+func Init() {
+
+}

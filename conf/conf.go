@@ -63,7 +63,7 @@ func loadRedis(file *ini.File) {
 		log.Fatalln(err)
 	}
 	RedisAddr = section.Key("RedisAddr").String()
-	RedisPassword = section.Key("RedisPassword").String()
+	RedisPassword = section.Key("RedisPassword").MustString("")
 	RedisDbName = section.Key("RedisDbName").MustInt(1) // MustInt，defaultVal为1
 }
 
