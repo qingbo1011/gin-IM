@@ -2,11 +2,25 @@
 
 [基于 WebSocket + MongoDB 的IM即时聊天Demo](https://blog.csdn.net/weixin_45304503/article/details/121787022)
 
-一个小demo。主要是熟悉一下WebSocket和MangoDB。
+一个小demo。主要是熟悉一下WebSocket和MangoDB。（目前只支持单聊和文字，只是提前熟悉一下，为后面的游戏项目打个基础）
 
 - `MySQL` ：存储用户基本信息
 - `MongoDB` ：存放用户聊天信息
 - `Redis` ：存储处理过期信息
+
+## WebSocket
+
+参考笔记：[WebSocket编程](https://www.qingbo1011.top/2022/04/25/Golang%E8%BF%9B%E9%98%B601%20%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/#websocket%E7%BC%96%E7%A8%8B)
+
+**[WebSocket 是什么原理？为什么可以实现持久连接？](https://www.zhihu.com/question/20215561/answer/40316953)**
+
+- **WebSocket是一种在单个TCP连接上进行全双工通信的协议**
+- WebSocket使得客户端和服务器之间的数据交换变得更加简单，**允许服务端主动向客户端推送数据**
+- 在WebSocket API中，**浏览器和服务器只需要完成一次握手，两者之间就直接可以创建持久性的连接，并进行双向数据传输**
+
+
+
+
 
 
 
