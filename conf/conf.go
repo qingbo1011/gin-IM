@@ -1,6 +1,7 @@
 package config
 
 import (
+	"strings"
 	"time"
 
 	"github.com/go-ini/ini"
@@ -23,10 +24,10 @@ var (
 	MangoAuthMechanism  string
 	MangoUser           string
 	MangoPassword       string
-	MangoHosts          string
+	MangoHosts          []string
 	MangoConnectTimeout time.Duration
-	MangoMaxPoolSize    int
-	MangoMinPoolSize    int
+	MangoMaxPoolSize    uint64
+	MangoMinPoolSize    uint64
 )
 
 func Init(path string) {
@@ -75,8 +76,9 @@ func loadMongo(file *ini.File) {
 	MangoAuthMechanism = section.Key("MangoAuthMechanism").String()
 	MangoUser = section.Key("MangoUser").String()
 	MangoPassword = section.Key("MangoPassword").String()
-	MangoHosts = section.Key("MangoHosts").String()
+	// MangoHosts比较特殊，需要一个[]string。所以在ini文件中以,进行字符串分割
+	MangoHosts = strings.Split(section.Key("MangoHosts").String(), ",")
 	MangoConnectTimeout = time.Duration(section.Key("MangoConnectTimeout").MustInt(10)) * time.Second
-	MangoMaxPoolSize = section.Key("MangoMaxPoolSize").MustInt(20)
-	MangoMinPoolSize = section.Key("MangoMinPoolSize").MustInt(5)
+	MangoMaxPoolSize = section.Key("MangoMaxPoolSize").MustUint64(20)
+	MangoMinPoolSize = section.Key("MangoMinPoolSize").MustUint64(5)
 }
