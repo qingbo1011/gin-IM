@@ -4,6 +4,7 @@ import (
 	"fmt"
 	config "gin-IM/conf"
 	"gin-IM/db/mysql"
+	"gin-IM/db/redis"
 )
 
 func main() {
@@ -18,4 +19,5 @@ func main() {
 func init() {
 	config.Init("./conf/config.ini")
 	mysql.Init()
+	redis.Init()
 }

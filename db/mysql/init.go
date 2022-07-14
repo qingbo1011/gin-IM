@@ -10,7 +10,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-var MysqlDB *gorm.DB // // 设置全局MysqlDB
+var MysqlDB *gorm.DB // 全局MysqlDB
 
 func Init() {
 	//dsn := "user:pass@tcp(127.0.0.1:3306)/dbname?charset=utf8mb4&parseTime=True&loc=Local"
