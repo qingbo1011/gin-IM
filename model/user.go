@@ -12,7 +12,7 @@ type User struct {
 }
 
 // SetPassword 密码加密
-func (u User) SetPassword(password string) error {
+func (u *User) SetPassword(password string) error {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 12)
 	if err != nil {
 		return err
@@ -22,7 +22,7 @@ func (u User) SetPassword(password string) error {
 }
 
 // CheckPassword 检查密码是否正确
-func (u User) CheckPassword(password string) (bool, error) {
+func (u *User) CheckPassword(password string) (bool, error) {
 	err := bcrypt.CompareHashAndPassword([]byte(u.PasswordDigest), []byte(password))
 	if err != nil {
 		return false, err
