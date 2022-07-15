@@ -12,7 +12,7 @@ func NewRoute() *gin.Engine {
 	user := r.Group("/api/user")
 	{
 		user.POST("/register", api.UserRegister)
-		//user.POST("/login", api.Login)
+		user.POST("/login", api.UserLogin)
 	}
 
 	return r
