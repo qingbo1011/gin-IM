@@ -14,5 +14,6 @@ func NewRoute() *gin.Engine {
 		user.POST("/register", api.UserRegister)
 		//user.POST("/login", api.Login)
 	}
+
 	return r
 }
