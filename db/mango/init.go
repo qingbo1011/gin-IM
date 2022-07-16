@@ -10,8 +10,8 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
 
-var Moctx = context.Background() // 全局MangoDB ctx
-var MangoClient *mongo.Client    // 全局MangoDB Client
+var MgCtx = context.Background() // 全局MangoDB ctx
+var MgClient *mongo.Client       // 全局MangoDB Client
 
 func Init() {
 	// mongoClient 连接客户端参数
@@ -33,5 +33,5 @@ func Init() {
 	if err != nil {
 		log.Infoln(err)
 	}
-	MangoClient = client
+	MgClient = client
 }

@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"gin-IM/db/redis"
 	"gin-IM/pkg/util"
 	"net/http"
 	"time"
@@ -32,7 +33,28 @@ func JWTAuth() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
-		if time.Now().Unix() > claims.ExpiresAt { // token过期了
+		// 判断该token是不是最新token（从redis里查）
+		ua := c.GetHeader("User-Agent")
+		val, err := redis.Rdb.HGet(redis.RCtx, "1", ua).Result()
+		if err != nil { // 说明该token是其他User-Agent的token（比如说电脑端的token，当然不能用来登录手机端）
+			c.JSON(http.StatusForbidden, gin.H{
+				"status": http.StatusForbidden,
+				"msg":    "token所属User-Agent不匹配！",
+				"error":  err.Error(),
+			})
+			c.Abort()
+			return
+		}
+		if token != val { // 请求携带的token与redis中存储的token不一致，说明是旧的token
+			c.JSON(http.StatusForbidden, gin.H{
+				"status": http.StatusForbidden,
+				"msg":    "token失效！",
+			})
+			c.Abort()
+			return
+		}
+		// 处理过期token
+		if time.Now().Unix() > claims.ExpiresAt {
 			c.JSON(http.StatusForbidden, gin.H{
 				"status": http.StatusForbidden,
 				"msg":    "token已过期！",

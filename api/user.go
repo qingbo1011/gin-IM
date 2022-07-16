@@ -38,6 +38,7 @@ func UserLogin(c *gin.Context) {
 		})
 		logging.Info(err)
 	}
-	res := service.UserLogin(userRegister)
+	ua := c.GetHeader("User-Agent")
+	res := service.UserLogin(ua, userRegister)
 	c.JSON(http.StatusOK, res)
 }

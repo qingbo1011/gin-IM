@@ -2,11 +2,13 @@ package service
 
 import (
 	"gin-IM/db/mysql"
+	"gin-IM/db/redis"
 	"gin-IM/model"
 	"gin-IM/pkg/util"
 	"gin-IM/request"
 	"gin-IM/response"
 	"net/http"
+	"strconv"
 
 	"github.com/jinzhu/gorm"
 )
@@ -46,7 +48,7 @@ func UserRegister(register request.UserRegisterRequest) response.Response {
 	}
 }
 
-func UserLogin(login request.UserRegisterRequest) response.Response {
+func UserLogin(userAgent string, login request.UserRegisterRequest) response.Response {
 	var user model.User
 	err := mysql.MysqlDB.Where(&model.User{UserName: login.UserName}).First(&user).Error
 	if err != nil {
@@ -88,6 +90,9 @@ func UserLogin(login request.UserRegisterRequest) response.Response {
 			Error:  err.Error(),
 		}
 	}
+	// 签发token后，存储到redis中（为了保证token唯一有效）
+	m := map[string]string{userAgent: token}
+	redis.Rdb.HSet(redis.RCtx, strconv.FormatUint(uint64(user.ID), 10), m)
 	return response.Response{
 		Status: http.StatusOK,
 		Msg:    "登录成功！",

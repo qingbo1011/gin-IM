@@ -5,8 +5,8 @@
 一个小demo。主要是熟悉一下WebSocket和MangoDB。（目前只支持单聊和文字，只是提前熟悉一下，为后面的游戏项目打个基础）
 
 - `MySQL` ：存储用户基本信息
-- `MongoDB` ：存放用户聊天信息
-- `Redis` ：存储处理过期信息
+- `MongoDB` ：存储用户聊天信息
+- `Redis` ：存储token信息，保证同一个User-Agent只有唯一一个token有效。
 
 实现功能：
 
@@ -66,9 +66,28 @@ MangoMinPoolSize = 20
 - 第一次登录的token：eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsInVzZXJuYW1lIjoidG9tIiwiZXhwIjoxNjU3OTgzNzAxLCJpc3MiOiJnaW4tSU0iLCJuYmYiOjE2NTc4OTczMDF9.ipiIDgAdTwrv8EX45y0UD6wy0fOOdzhIDysyB8kJais
 - 第二次登录的token：eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsInVzZXJuYW1lIjoidG9tIiwiZXhwIjoxNjU3OTgzODAxLCJpc3MiOiJnaW4tSU0iLCJuYmYiOjE2NTc4OTc0MDF9.3ZDrBr0FaFKpcicJpNkvEVCd8UdEQp079mg4fr2jBcc
 
-通过测试可以发现，两个token都是有效的。只有到了指定的日期后，token才会失效。这显然是不合理的。在同一个设备上重新登陆后，
+通过测试可以发现，两个token都是有效的。只有到了指定的日期后，token才会失效。这显然是不合理的。所以我在这里的处理是：**引入Redis**。
 
-> 
+具体逻辑：使用redis中的hash结构。`key`为user的唯一标识uid；`filed`为该user的User-Agent，表示是哪一个设备（同一个设备只能有1个token有效）；`value`存储该user的唯一有效token。
+
+结构如下：
+
+![](https://img-qingbo.oss-cn-beijing.aliyuncs.com/img/20220716184841.png)
+
+- 在`service/user.go`中的`UserLogin()`增加逻辑：登录成功后签发token时，确定`uid`和`User-Agent`。直接`Rdb.HSet()`即可
+  - 因为`Rdb.HSet()`的处理逻辑是，如果存在就更新value；不存在就新建。
+- 在`middleware/jwt.go`中增加判定逻辑。通过`uid`和`User-Agent`（从解析token中包含的相关信息claims中获取uid），查出redis中的token。判定携带的token是否和redis中的token一样。如果不一样说明是旧的token，直接`c.Abort()`然后`return`。
+
+> 这只是我自己的一个想法，如果以后发现更好的解决方案，会继续更新的。
 
 
+
+更新后：
+
+- 第一次token：eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsInVzZXJuYW1lIjoidG9tIiwiZXhwIjoxNjU4MDU0NzUxLCJpc3MiOiJnaW4tSU0iLCJuYmYiOjE2NTc5NjgzNTF9.-FvhHHpJokeigiSJOUkTWaQ4ytsYDZcxaTklPLzJGR4
+- 第二次token：eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsInVzZXJuYW1lIjoidG9tIiwiZXhwIjoxNjU4MDU0NzgwLCJpc3MiOiJnaW4tSU0iLCJuYmYiOjE2NTc5NjgzODB9.uBkmCpbTfEbr3fBiMQ26XrxOQc-hl6H5jvS_3BfW-2o
+
+可以发现使用第一次token去请求会403：
+
+![](https://img-qingbo.oss-cn-beijing.aliyuncs.com/img/20220716184738.png)
 

@@ -17,16 +17,16 @@ func init() {
 }
 
 func TestMango(t *testing.T) {
-	collection := mango.MangoClient.Database("test").Collection("person")
+	collection := mango.MgClient.Database("test").Collection("person")
 	// Find
 	// SetSort 设置排序字段（1表示升序；-1表示降序）
 	findOptions := options.Find().SetSort(bson.D{{"level", 1}})
-	findCursor, err := collection.Find(mango.Moctx, bson.M{"gender": "男"}, findOptions)
+	findCursor, err := collection.Find(mango.MgCtx, bson.M{"gender": "男"}, findOptions)
 	if err != nil {
 		log.Fatal(err)
 	}
 	var results []bson.M
-	err = findCursor.All(mango.Moctx, &results)
+	err = findCursor.All(mango.MgCtx, &results)
 	if err != nil {
 		log.Fatal(err)
 	}

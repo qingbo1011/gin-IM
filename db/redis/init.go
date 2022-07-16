@@ -7,7 +7,7 @@ import (
 	"github.com/go-redis/redis/v8"
 )
 
-var Rctx = context.Background() // 全局Redis ctx
+var RCtx = context.Background() // 全局Redis ctx
 var Rdb *redis.Client           // 全局Redis DB
 
 func Init() {
