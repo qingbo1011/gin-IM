@@ -8,7 +8,18 @@
 - `MongoDB` ：存放用户聊天信息
 - `Redis` ：存储处理过期信息
 
-关于这个项目的用户登录注册以及JWT相关内容，跟gin-memos项目中一样。
+实现功能：
+
+- [x] 登录注册+JWT
+- [x] 唯一token有效（同一个用户在同一个设备只能有一个有效token，如果产生新的token了，旧的token就算没有过期也会无效）
+- [x] 单聊
+- [ ] 群聊
+- [x] 文字
+- [x] emoji
+- [ ] 语音，图片（表情包）
+- [ ] 敏感词检查
+
+其他功能有兴趣可以再自行研究。语音可图片可以考虑使用OSS之类的。这里只是一个demo，就只先完成一部分功能了。
 
 ## 配置文件
 
@@ -50,11 +61,14 @@ MangoMinPoolSize = 20
 - WebSocket使得客户端和服务器之间的数据交换变得更加简单，**允许服务端主动向客户端推送数据**
 - 在WebSocket API中，**浏览器和服务器只需要完成一次握手，两者之间就直接可以创建持久性的连接，并进行双向数据传输**
 
+## 唯一token有效
 
+- 第一次登录的token：eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsInVzZXJuYW1lIjoidG9tIiwiZXhwIjoxNjU3OTgzNzAxLCJpc3MiOiJnaW4tSU0iLCJuYmYiOjE2NTc4OTczMDF9.ipiIDgAdTwrv8EX45y0UD6wy0fOOdzhIDysyB8kJais
+- 第二次登录的token：eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsInVzZXJuYW1lIjoidG9tIiwiZXhwIjoxNjU3OTgzODAxLCJpc3MiOiJnaW4tSU0iLCJuYmYiOjE2NTc4OTc0MDF9.3ZDrBr0FaFKpcicJpNkvEVCd8UdEQp079mg4fr2jBcc
 
+通过测试可以发现，两个token都是有效的。只有到了指定的日期后，token才会失效。这显然是不合理的。在同一个设备上重新登陆后，
 
-
-
+> 
 
 
 

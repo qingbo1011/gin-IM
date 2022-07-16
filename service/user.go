@@ -64,7 +64,7 @@ func UserLogin(login request.UserRegisterRequest) response.Response {
 			Error:  err.Error(),
 		}
 	}
-	// 用户从数据库中找到了
+	// 用户从数据库中找到了，检验密码
 	ok, err := user.CheckPassword(login.Password)
 	if err != nil {
 		return response.Response{
