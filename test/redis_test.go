@@ -39,3 +39,11 @@ func TestSelectRedis(t *testing.T) {
 	}
 	fmt.Println(val)
 }
+
+func TestIncrRedis(t *testing.T) {
+	result, err := redis.Rdb.Incr(redis.RCtx, "A-->B").Result()
+	if err != nil {
+		logging.Info(err)
+	}
+	fmt.Println(result)
+}

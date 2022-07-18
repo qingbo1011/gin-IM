@@ -6,7 +6,7 @@
 
 - `MySQL` ：存储用户基本信息
 - `MongoDB` ：存储用户聊天信息
-- `Redis` ：存储token信息，保证同一个User-Agent只有唯一一个token有效。
+- `Redis` ：存储处理过期信息；存储token信息，保证同一个User-Agent只有唯一一个token有效。
 
 实现功能：
 
@@ -51,16 +51,6 @@ MangoMaxPoolSize = 20
 MangoMinPoolSize = 20
 ```
 
-## WebSocket
-
-参考笔记：[WebSocket编程](https://www.qingbo1011.top/2022/04/25/Golang%E8%BF%9B%E9%98%B601%20%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/#websocket%E7%BC%96%E7%A8%8B)
-
-**[WebSocket 是什么原理？为什么可以实现持久连接？](https://www.zhihu.com/question/20215561/answer/40316953)**
-
-- **WebSocket是一种在单个TCP连接上进行全双工通信的协议**
-- WebSocket使得客户端和服务器之间的数据交换变得更加简单，**允许服务端主动向客户端推送数据**
-- 在WebSocket API中，**浏览器和服务器只需要完成一次握手，两者之间就直接可以创建持久性的连接，并进行双向数据传输**
-
 ## 唯一token有效
 
 - 第一次登录的token：eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsInVzZXJuYW1lIjoidG9tIiwiZXhwIjoxNjU3OTgzNzAxLCJpc3MiOiJnaW4tSU0iLCJuYmYiOjE2NTc4OTczMDF9.ipiIDgAdTwrv8EX45y0UD6wy0fOOdzhIDysyB8kJais
@@ -80,8 +70,6 @@ MangoMinPoolSize = 20
 
 > 这只是我自己的一个想法，如果以后发现更好的解决方案，会继续更新的。
 
-
-
 更新后：
 
 - 第一次token：eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsInVzZXJuYW1lIjoidG9tIiwiZXhwIjoxNjU4MDU0NzUxLCJpc3MiOiJnaW4tSU0iLCJuYmYiOjE2NTc5NjgzNTF9.-FvhHHpJokeigiSJOUkTWaQ4ytsYDZcxaTklPLzJGR4
@@ -90,4 +78,40 @@ MangoMinPoolSize = 20
 可以发现使用第一次token去请求会403：
 
 ![](https://img-qingbo.oss-cn-beijing.aliyuncs.com/img/20220716184738.png)
+
+> 据说微信就是这样做的（跟群友讨论的）：
+>
+> - 这不就是提掉线吗？
+> - 登录后 将以前此用户的token删除掉即可
+> - 如果想多设备登录 就加入设备就可以 当前token和用户id，设备绑定
+> - 微信就是这样做的
+>
+> 跟大家讨论，感觉基本都是基于redis缓存token的，踢掉用户也是这么干的。
+>
+> 不过感觉这样就跟jwt的无状态背道而驰了，回到了session。如果以后有更优雅更好的方式，会再记录的。
+
+## WebSocket
+
+参考笔记：[WebSocket编程](https://www.qingbo1011.top/2022/04/25/Golang%E8%BF%9B%E9%98%B601%20%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/#websocket%E7%BC%96%E7%A8%8B)
+
+**[WebSocket 是什么原理？为什么可以实现持久连接？](https://www.zhihu.com/question/20215561/answer/40316953)**
+
+- **WebSocket是一种在单个TCP连接上进行全双工通信的协议**
+- WebSocket使得客户端和服务器之间的数据交换变得更加简单，**允许服务端主动向客户端推送数据**
+- 在WebSocket API中，**浏览器和服务器只需要完成一次握手，两者之间就直接可以创建持久性的连接，并进行双向数据传输**
+
+关于websocket，这里为了方便我急没有使用jwt鉴权。在api里写了一个test接口，去测试token的唯一有效。然后关于websocket的代码中，`replayMsg`的code我这里为了方便就用的`http`状态码。这显然是不合理的。应该需要提前做好约定，然后自己封装一些关于websocket的状态码。
+
+postman中测试websocket接口：**[Postman Now Supports WebSocket APIs](https://blog.postman.com/postman-supports-websocket-apis/)**
+
+> postman9版本在win10上安装出错解决方案：Postman安装失败： [Installation has failed Failed to extract installer](https://blog.csdn.net/zhouyingge1104/article/details/119359357)
+>
+
+![](https://img-qingbo.oss-cn-beijing.aliyuncs.com/img/20220718155110.gif)
+
+
+
+
+
+
 
