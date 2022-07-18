@@ -46,6 +46,7 @@ MangoAuthMechanism = SCRAM-SHA-1
 MangoUser = root
 MangoPassword = 1234
 MangoHosts = 127.0.0.1:27017
+MangoDBName = gin-IM
 MangoConnectTimeout = 10
 MangoMaxPoolSize = 20
 MangoMinPoolSize = 20
@@ -108,6 +109,14 @@ postman中测试websocket接口：**[Postman Now Supports WebSocket APIs](https:
 >
 
 ![](https://img-qingbo.oss-cn-beijing.aliyuncs.com/img/20220718155110.gif)
+
+### 简单对聊
+
+这里就看一下postman响应数据和Redis、MangoDB中存储到的数据即可：
+
+![](https://img-qingbo.oss-cn-beijing.aliyuncs.com/img/20220718225228.png)![](https://img-qingbo.oss-cn-beijing.aliyuncs.com/img/20220718225239.png)
+
+![](https://img-qingbo.oss-cn-beijing.aliyuncs.com/img/20220718225258.png)
 
 
 

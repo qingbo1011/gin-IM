@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"gin-IM/db/redis"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -90,8 +91,15 @@ func (c *Client) Read() {
 				Client:  c,
 				Message: []byte(sendMsg.Content),
 			}
-		//
+		// 拉取历史消息
 		case 2:
+			t, err := strconv.Atoi(sendMsg.Content) // 传送来时间
+			if err != nil {
+				t = 999999999
+			}
+			fmt.Println(t)
+		//
+		case 3:
 
 		}
 

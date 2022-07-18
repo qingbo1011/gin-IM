@@ -3,6 +3,7 @@ package ws
 import (
 	"encoding/json"
 	"fmt"
+	config "gin-IM/conf"
 	"net/http"
 
 	"github.com/gorilla/websocket"
@@ -80,6 +81,12 @@ func (m *ClientManager) Start() {
 				if err != nil {
 					logging.Info(err)
 				}
+				// 将消息插入到MangoDB中
+				// true表示已读（这里处理逻辑比较粗糙，在线就认为已读）
+				err = InsertMsg(config.MangoDBName, id, string(message), true, int64(month*3))
+				if err != nil {
+					logging.Info(err)
+				}
 			} else {
 				fmt.Println("对方不在线")
 				replayMsg := ReplyMsg{
@@ -94,9 +101,11 @@ func (m *ClientManager) Start() {
 				if err != nil {
 					logging.Info(err)
 				}
-
+				err = InsertMsg(config.MangoDBName, id, string(message), false, int64(month*3))
+				if err != nil {
+					logging.Info(err)
+				}
 			}
-
 		}
 	}
 }

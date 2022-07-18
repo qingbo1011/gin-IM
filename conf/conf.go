@@ -25,6 +25,7 @@ var (
 	MangoUser           string
 	MangoPassword       string
 	MangoHosts          []string
+	MangoDBName         string
 	MangoConnectTimeout time.Duration
 	MangoMaxPoolSize    uint64
 	MangoMinPoolSize    uint64
@@ -78,6 +79,7 @@ func loadMongo(file *ini.File) {
 	MangoPassword = section.Key("MangoPassword").String()
 	// MangoHosts比较特殊，需要一个[]string。所以在ini文件中以,进行字符串分割
 	MangoHosts = strings.Split(section.Key("MangoHosts").String(), ",")
+	MangoDBName = section.Key("MangoDBName").String()
 	MangoConnectTimeout = time.Duration(section.Key("MangoConnectTimeout").MustInt(10)) * time.Second
 	MangoMaxPoolSize = section.Key("MangoMaxPoolSize").MustUint64(20)
 	MangoMinPoolSize = section.Key("MangoMinPoolSize").MustUint64(5)
