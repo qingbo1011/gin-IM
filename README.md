@@ -41,7 +41,7 @@ MysqlName = chat_demo
 
 [redis]
 RedisAddr = 127.0.0.1:6379
-RedisPassWord =
+RedisPassword =
 RedisDbName = 1
 
 [mongo]
