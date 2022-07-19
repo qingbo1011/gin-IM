@@ -36,7 +36,7 @@ HttpPort = :8080
 MysqlHost = 127.0.0.1
 MysqlPort = 3308
 MysqlUser = root
-MysqlPassWord = 123456
+MysqlPassword = 123456
 MysqlName = chat_demo
 
 [redis]
