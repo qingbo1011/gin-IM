@@ -1,10 +1,10 @@
 package ws
 
 type Trainer struct {
-	Content   string `json:"content"`    // 内容
-	StartTime int64  `json:"start_time"` // 创建时间
-	EndTime   int64  `json:"end_time"`   // 过期时间
-	Read      bool   `json:"read"`       // 是否已读
+	Content   string `json:"content"`   // 内容
+	StartTime int64  `json:"startTime"` // 创建时间
+	EndTime   int64  `json:"endTime"`   // 过期时间
+	Read      bool   `json:"read"`      // 是否已读
 }
 
 type Result struct {

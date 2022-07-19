@@ -23,7 +23,7 @@ func NewRoute() *gin.Engine {
 	}
 
 	ws := r.Group("/ws")
-	ws.Use(middleware.JWTAuth())
+	//ws.Use(middleware.JWTAuth()) // 方便测试这里就没有使用jwt,该有的鉴权功能已经实现类（正常来说uid应该在token中获取）
 	{
 		ws.GET("/", ws2.WsHandler)
 	}

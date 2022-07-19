@@ -1,6 +1,7 @@
 package ws
 
 import (
+	"context"
 	"fmt"
 	"gin-IM/db/mango"
 	"gin-IM/model/ws"
@@ -42,12 +43,13 @@ func FindMany(db string, sendId string, id string, time int64, pageSize int64) (
 	sendIdCollection := mango.MgClient.Database(db).Collection(sendId)
 	idCollection := mango.MgClient.Database(db).Collection(id)
 	// SetSort 设置排序字段（1表示升序；-1表示降序）
-	op1 := options.Find().SetSort(bson.D{{"starttime", -1}})
-	op2 := options.Find().SetLimit(int64(pageSize))
-	sendIdcur, err := sendIdCollection.Find(mango.MgCtx, op1, op2)
-	idcur, err := idCollection.Find(mango.MgCtx, op1, op2)
-	err = sendIdcur.All(mango.MgCtx, &resultYou) // sendId 对面发过来的
-	err = idcur.All(mango.MgCtx, &resultMe)      // id 发给对面的
+	// 如果不知道该使用什么context，可以通过context.TODO() 产生context
+	sendIdTimeCursor, err := sendIdCollection.Find(context.TODO(),
+		options.Find().SetSort(bson.D{{"startTime", -1}}), options.Find().SetLimit(int64(pageSize)))
+	idTimeCursor, err := idCollection.Find(context.TODO(),
+		options.Find().SetSort(bson.D{{"startTime", -1}}), options.Find().SetLimit(int64(pageSize)))
+	err = sendIdTimeCursor.All(context.TODO(), &resultYou) // sendId 对面发过来的
+	err = idTimeCursor.All(context.TODO(), &resultMe)      // Id 发给对面的
 	if err != nil {
 		return nil, err
 	}
@@ -71,7 +73,7 @@ func FirstFindMsg(db string, sendId string, id string) ([]ws.Result, error) {
 			"&all": []bool{false},
 		},
 	}
-	op1 := options.Find().SetSort(bson.D{{"starttime", 1}})
+	op1 := options.Find().SetSort(bson.D{{"start_time", 1}})
 	op2 := options.Find().SetLimit(1)
 	sendCur, err := sendIdCollection.Find(mango.MgCtx, filter, op1, op2)
 	if sendCur == nil {
@@ -84,7 +86,7 @@ func FirstFindMsg(db string, sendId string, id string) ([]ws.Result, error) {
 	}
 	if len(unReads) > 0 {
 		timeFilter := bson.M{
-			"starttime": bson.M{
+			"start_time": bson.M{
 				"$gte": unReads[0].StartTime,
 			},
 		}
@@ -106,7 +108,7 @@ func FirstFindMsg(db string, sendId string, id string) ([]ws.Result, error) {
 	overTime := bson.D{
 		{
 			"$and", bson.A{
-				bson.D{{"endtime", bson.M{"&lt": time.Now().Unix()}}},
+				bson.D{{"end_time", bson.M{"&lt": time.Now().Unix()}}},
 				bson.D{{"read", bson.M{"$eq": true}}},
 			}},
 	}
@@ -118,20 +120,21 @@ func FirstFindMsg(db string, sendId string, id string) ([]ws.Result, error) {
 		"$set": bson.M{"read": true},
 	})
 	_, err = sendIdCollection.UpdateMany(mango.MgCtx, filter, bson.M{
-		"&set": bson.M{"endtime": time.Now().Unix() + int64(month*3)},
+		"&set": bson.M{"end_time": time.Now().Unix() + int64(month*3)},
 	})
 	return results, nil
 }
 
+// 对两个ws.Trainer类型的切片进行简单的排序和整合
 func appendAndSort(resultMe []ws.Trainer, resultYou []ws.Trainer) ([]ws.Result, error) {
 	var results []ws.Result
 	for _, v := range resultMe {
-		sendSort := SendSortMsg{
+		sendSort := SendSortMsg{ // 构造返回的msg
 			Content:  v.Content,
 			Read:     v.Read,
 			CreateAt: v.StartTime,
 		}
-		result := ws.Result{
+		result := ws.Result{ // 构造返回所有的内容,包括传送者
 			StartTime: v.StartTime,
 			Msg:       fmt.Sprintf("%v", sendSort),
 			From:      "me",

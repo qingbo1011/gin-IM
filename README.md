@@ -19,6 +19,10 @@
 - [ ] 语音，图片（表情包）
 - [ ] 敏感词检查
 
+> [go实现敏感词过滤](https://www.jianshu.com/p/01e5b39ec7e6)
+>
+> [Golang基于DFA算法实现的敏感词过滤](https://github.com/antlinker/go-dirtyfilter)
+
 其他功能有兴趣可以再自行研究。语音可图片可以考虑使用OSS之类的。这里只是一个demo，就只先完成一部分功能了。
 
 ## 配置文件
@@ -122,6 +126,7 @@ postman中测试websocket接口：**[Postman Now Supports WebSocket APIs](https:
 
 本来想在Postman中测试Websocket的鉴权的，但是发现websocket连接中获取到的User-Agent为空，需要自己在header中指定：
 
+![](https://img-qingbo.oss-cn-beijing.aliyuncs.com/img/20220719095054.png)
 
 
 
@@ -129,10 +134,9 @@ postman中测试websocket接口：**[Postman Now Supports WebSocket APIs](https:
 
 
 
+## 心得
 
-
-
-
+学会debug真的是一件很重要的事情。有时看起来没有头绪的问题，只要一debug就显得很清晰了。
 
 
 
