@@ -1,7 +1,6 @@
 package ws
 
 import (
-	"context"
 	"fmt"
 	"gin-IM/db/mango"
 	"gin-IM/model/ws"
@@ -43,13 +42,12 @@ func FindMany(db string, sendId string, id string, time int64, pageSize int64) (
 	sendIdCollection := mango.MgClient.Database(db).Collection(sendId)
 	idCollection := mango.MgClient.Database(db).Collection(id)
 	// SetSort 设置排序字段（1表示升序；-1表示降序）
-	// 如果不知道该使用什么context，可以通过context.TODO() 产生context
-	sendIdTimeCursor, err := sendIdCollection.Find(context.TODO(),
-		options.Find().SetSort(bson.D{{"startTime", -1}}), options.Find().SetLimit(int64(pageSize)))
-	idTimeCursor, err := idCollection.Find(context.TODO(),
-		options.Find().SetSort(bson.D{{"startTime", -1}}), options.Find().SetLimit(int64(pageSize)))
-	err = sendIdTimeCursor.All(context.TODO(), &resultYou) // sendId 对面发过来的
-	err = idTimeCursor.All(context.TODO(), &resultMe)      // Id 发给对面的
+	op1 := options.Find().SetSort(bson.D{{"start_time", -1}})
+	op2 := options.Find().SetLimit(pageSize)
+	sendIdcur, err := sendIdCollection.Find(mango.MgCtx, bson.M{}, op1, op2)
+	idcur, err := idCollection.Find(mango.MgCtx, bson.M{}, op1, op2)
+	err = sendIdcur.All(mango.MgCtx, &resultYou) // sendId 对面发过来的
+	err = idcur.All(mango.MgCtx, &resultMe)      // id 发给对面的
 	if err != nil {
 		return nil, err
 	}
