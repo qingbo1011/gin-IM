@@ -4,6 +4,7 @@ import (
 	"gin-IM/db/redis"
 	"gin-IM/pkg/util"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -35,7 +36,7 @@ func JWTAuth() gin.HandlerFunc {
 		}
 		// 判断该token是不是最新token（从redis里查）
 		ua := c.GetHeader("User-Agent")
-		val, err := redis.Rdb.HGet(redis.RCtx, "1", ua).Result()
+		val, err := redis.Rdb.HGet(redis.RCtx, strconv.Itoa(int(claims.Uid)), ua).Result()
 		if err != nil { // 说明该token是其他User-Agent的token（比如说电脑端的token，当然不能用来登录手机端）
 			c.JSON(http.StatusForbidden, gin.H{
 				"status": http.StatusForbidden,

@@ -3,6 +3,7 @@ package ws
 import (
 	"encoding/json"
 	"fmt"
+	config "gin-IM/conf"
 	"gin-IM/db/redis"
 	"net/http"
 	"strconv"
@@ -97,12 +98,61 @@ func (c *Client) Read() {
 			if err != nil {
 				t = 999999999
 			}
-			fmt.Println(t)
+			results, err := FindMany(config.MangoDBName, c.SendID, c.ID, int64(t), 10) // 获取10条历史记录
+			if err != nil {
+				logging.Info(err)
+			}
+			if len(results) > 10 { // 大于10条了只选取10条
+				results = results[:10]
+			} else if len(results) == 0 {
+				replyMsg := ReplyMsg{
+					Code:    http.StatusOK,
+					Content: "到底了",
+				}
+				msg, err := json.Marshal(replyMsg)
+				if err != nil {
+					logging.Info(err)
+				}
+				err = c.Socket.WriteMessage(websocket.TextMessage, msg)
+				if err != nil {
+					logging.Info(err)
+				}
+			}
+			for _, result := range results {
+				replyMsg := ReplyMsg{
+					From:    result.From,
+					Content: result.Msg,
+				}
+				msg, err := json.Marshal(replyMsg)
+				if err != nil {
+					logging.Info(err)
+				}
+				err = c.Socket.WriteMessage(websocket.TextMessage, msg)
+				if err != nil {
+					logging.Info(err)
+				}
+			}
 		//
 		case 3:
-
+			results, err := FirstFindMsg(config.MangoDBName, c.SendID, c.ID)
+			if err != nil {
+				logging.Info(err)
+			}
+			for _, result := range results {
+				replyMsg := ReplyMsg{
+					From:    result.From,
+					Content: result.Msg,
+				}
+				msg, err := json.Marshal(replyMsg)
+				if err != nil {
+					logging.Info(err)
+				}
+				err = c.Socket.WriteMessage(websocket.TextMessage, msg)
+				if err != nil {
+					logging.Info(err)
+				}
+			}
 		}
-
 	}
 }
 

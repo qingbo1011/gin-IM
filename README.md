@@ -118,6 +118,20 @@ postman中测试websocket接口：**[Postman Now Supports WebSocket APIs](https:
 
 ![](https://img-qingbo.oss-cn-beijing.aliyuncs.com/img/20220718225258.png)
 
+### Postman WebSocket JWT鉴权的坑
+
+本来想在Postman中测试Websocket的鉴权的，但是发现websocket连接中获取到的User-Agent为空，需要自己在header中指定：
+
+
+
+
+
+
+
+
+
+
+
 
 
 

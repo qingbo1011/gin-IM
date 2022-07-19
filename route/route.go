@@ -4,7 +4,6 @@ import (
 	"gin-IM/api"
 	"gin-IM/middleware"
 	ws2 "gin-IM/service/ws"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
@@ -20,14 +19,11 @@ func NewRoute() *gin.Engine {
 	test := r.Group("api/test")
 	test.Use(middleware.JWTAuth())
 	{
-		test.GET("/test", func(c *gin.Context) {
-			c.JSON(http.StatusOK, gin.H{
-				"msg": "test",
-			})
-		})
+		test.GET("/test", api.Test)
 	}
 
 	ws := r.Group("/ws")
+	ws.Use(middleware.JWTAuth())
 	{
 		ws.GET("/", ws2.WsHandler)
 	}

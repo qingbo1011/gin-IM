@@ -34,6 +34,7 @@ func InsertMsg(database string, id string, content string, read bool, expire int
 	return nil
 }
 
+// FindMany 获取指定条数的历史聊天记录
 func FindMany(db string, sendId string, id string, time int64, pageSize int64) ([]ws.Result, error) {
 	var resultMe []ws.Trainer
 	var resultYou []ws.Trainer
