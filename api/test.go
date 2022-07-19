@@ -15,6 +15,7 @@ func Test(c *gin.Context) {
 			"status": http.StatusInternalServerError,
 			"error":  err.Error(),
 		})
+		return
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"msg": "欢迎：" + claims.Username,

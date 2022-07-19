@@ -19,6 +19,7 @@ func UserRegister(c *gin.Context) {
 			"error":  err.Error(),
 		})
 		logging.Info(err)
+		return
 	}
 	res := service.UserRegister(userRegister)
 	// gin.H其实就是个map[string]any嘛。
@@ -37,6 +38,7 @@ func UserLogin(c *gin.Context) {
 			"error":  err.Error(),
 		})
 		logging.Info(err)
+		return
 	}
 	ua := c.GetHeader("User-Agent")
 	res := service.UserLogin(ua, userRegister)
