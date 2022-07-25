@@ -4,7 +4,6 @@ import (
 	config "gin-IM/conf"
 	"gin-IM/model"
 	"strings"
-	"time"
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
@@ -25,11 +24,11 @@ func Init() {
 	if err != nil {
 		log.Infoln(err)
 	}
-	db.LogMode(true)                             // 开启 Logger, 以展示详细的日志
-	db.SingularTable(true)                       // 如果设置禁用表名复数形式属性为 true，`User` 的表名将是 `user`(因为gorm默认表名是复数)
-	db.DB().SetMaxIdleConns(20)                  // 设置空闲连接池中的最大连接数
-	db.DB().SetMaxOpenConns(100)                 // 设置数据库连接最大打开数。
-	db.DB().SetConnMaxLifetime(time.Second * 30) // 设置可重用连接的最长时间
+	db.LogMode(config.MysqlIsLog)                           // 开启 Logger, 以展示详细的日志
+	db.SingularTable(config.MysqlIsSingularTable)           // 如果设置禁用表名复数形式属性为 true，`User` 的表名将是 `user`(因为gorm默认表名是复数)
+	db.DB().SetMaxIdleConns(config.MysqlMaxIdleConns)       // 设置空闲连接池中的最大连接数
+	db.DB().SetMaxOpenConns(config.MysqlMaxOpenConns)       // 设置数据库连接最大打开数。
+	db.DB().SetConnMaxLifetime(config.MysqlConnMaxLifetime) // 设置可重用连接的最长时间
 	// 自动迁移
 	db.AutoMigrate(&model.User{})
 	MysqlDB = db

@@ -11,11 +11,16 @@ import (
 var (
 	HttpPort string
 
-	MysqlHost     string
-	MysqlPort     string
-	MysqlUser     string
-	MysqlPassword string
-	MysqlName     string
+	MysqlHost            string
+	MysqlPort            string
+	MysqlUser            string
+	MysqlPassword        string
+	MysqlName            string
+	MysqlIsLog           bool
+	MysqlIsSingularTable bool
+	MysqlMaxIdleConns    int
+	MysqlMaxOpenConns    int
+	MysqlConnMaxLifetime time.Duration
 
 	RedisAddr     string
 	RedisPassword string
@@ -57,6 +62,11 @@ func loadMysql(file *ini.File) {
 	MysqlUser = section.Key("MysqlUser").String()
 	MysqlPassword = section.Key("MysqlPassword").String()
 	MysqlName = section.Key("MysqlName").String()
+	MysqlIsLog = section.Key("MysqlIsLog").MustBool(true)
+	MysqlIsSingularTable = section.Key("MysqlIsSingularTable").MustBool(true)
+	MysqlMaxIdleConns = section.Key("MysqlMaxIdleConns").MustInt(20)
+	MysqlMaxOpenConns = section.Key("MysqlMaxOpenConns").MustInt(100)
+	MysqlConnMaxLifetime = time.Duration(section.Key("MysqlConnMaxLifetime").MustInt(30)) * time.Second
 }
 
 func loadRedis(file *ini.File) {

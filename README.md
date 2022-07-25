@@ -37,7 +37,18 @@ MysqlHost = 127.0.0.1
 MysqlPort = 3308
 MysqlUser = root
 MysqlPassword = 123456
+;Mysql数据库名
 MysqlName = chat_demo
+;gorm是否开启Logger, 以展示详细的日志
+MysqlIsLog = true
+;gorm是否禁用表名复数形式，若为true，User的表名将是user(因为gorm默认表名是复数)
+MysqlIsSingularTable = true
+;gorm空闲连接池中的最大连接数
+MysqlMaxIdleConns = 20
+;gorm数据库连接最大打开数
+MysqlMaxOpenConns = 100
+;gorm可重用连接的最长时间（单位当然要看conf.go里面读取出来之后*多少）
+MysqlConnMaxLifetime = 30
 
 [redis]
 RedisAddr = 127.0.0.1:6379
