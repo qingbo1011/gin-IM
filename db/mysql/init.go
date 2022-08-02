@@ -15,7 +15,7 @@ var MysqlDB *gorm.DB // 全局MysqlDB
 func Init() {
 	//dsn := "user:pass@tcp(127.0.0.1:3306)/dbname?charset=utf8mb4&parseTime=True&loc=Local"
 	var builder strings.Builder
-	s := []string{config.MysqlUser, ":", config.MysqlPassword, "@tcp(", config.MysqlHost, ":", config.MysqlPort, ")/", config.MysqlName, "?charset=utf8&parseTime=True&loc=Local"}
+	s := []string{config.MysqlUser, ":", config.MysqlPassword, "@tcp(", config.MysqlHost, ":", config.MysqlPort, ")/", config.MysqlName, "?charset=utf8mb4&parseTime=True&loc=Local"}
 	for _, str := range s {
 		builder.WriteString(str)
 	}
